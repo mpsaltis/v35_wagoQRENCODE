@@ -21,6 +21,7 @@ Create a file names Dockefile with the following:
 ![image](https://github.com/mpsaltis/v35_wagoQRENCODE/assets/90796089/f9f1af7f-1be2-4752-be04-849f586b8e48)
 
 4. Docker build -t wago/qrencode
+
 ![image](https://github.com/mpsaltis/v35_wagoQRENCODE/assets/90796089/864f7573-08e2-4dd8-951c-73b2dfeba1b2)
 
 
