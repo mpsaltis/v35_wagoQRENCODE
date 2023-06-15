@@ -6,22 +6,36 @@ QR Code Generator for Codesys Visualizations
 This repo uses qrencode running in a Docker Container to generate QR images, based on a string that it is given. This can then be saved in a location where it can be accessed within Codesys.Dynamic bitmap can be used to dynamically update the image
 
 
-1. create qrencode dir in root
-   '''mkdir qrencode'''
-3. cd qrencode // enter qrencode dir
-4. nano DockerFile // create Dockerfile
+1. create qrencode directory in root
+```   
+mkdir qrencode
+```
+
+2. enter qrencode directory
+```
+cd qrencode
+```
+
+3. create Dockerfile
+```
+nano DockerFile
+```
 
 Create a file names Dockefile with the following: 
-
+```
   FROM alpine:3.18.0
 
   // # hadolint ignore=DL3018
   RUN apk --update --no-cache add libqrencode \
       && rm -rf /var/cache/apk/*
+```
 
 ![image](https://github.com/mpsaltis/v35_wagoQRENCODE/assets/90796089/f9f1af7f-1be2-4752-be04-849f586b8e48)
 
-4. Docker build -t wago/qrencode
+4. build image 
+ ```
+ Docker build -t wago/qrencode
+  ```
 
 ![image](https://github.com/mpsaltis/v35_wagoQRENCODE/assets/90796089/864f7573-08e2-4dd8-951c-73b2dfeba1b2)
 
