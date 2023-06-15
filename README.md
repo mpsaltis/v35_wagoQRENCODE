@@ -23,7 +23,7 @@ Note: The directory may be changed to /home/codesys_root/PlcLogic/visu to be use
 
 1. First run the following command in the shell of the PLC to generate a PNG QR code with the name palceholderqr in the home directory:
 ```  
-docker run --rm -t -v /home/:/tmp wago/qrencode qrencode -l L -o /tmp/placeholderqr.bmp www.google.com
+docker run --rm -t -v /home/:/tmp mpsaltis/wago_qrencode qrencode -l L -o /tmp/placeholderqr.bmp www.google.com
 ```
 2. Then move this image from the PLC, to your PC to be later imported into Codesys. This can be done with a utility like WinSCP
    
@@ -35,11 +35,42 @@ Note- The image must be a PNG to be updated dynamically
 
 Create a POU with an FUExecuteCommand function block to pass the command to the shell from Codesys. 
 
+```
+PROGRAM PLC_PRG
+VAR
+	xExecute: BOOL;
+	bSelect: BYTE;
+	sCommand: STRING(1024);
+	R_sStdOut: STRING;
+	R_sStdError: STRING;
+	pResult: WagoSysProcess.SysTypes.RTS_IEC_RESULT;
+	sURL: STRING(128) := 'www.wago.com';
+	xUpdateImage: INT;
+END_VAR
+```
+```
+sURL;
+sCommand := CONCAT('docker run --rm -t -v /home/codesys_root/PlcLogic/visu:/tmp mpsaltis/wago_qrencode qrencode -l L -o /tmp/placeholderqr.bmp ', sUrl); 
+
+
+IF xExecute THEN	
+WagoSysProcess.FuExecuteCommand(
+	sCommand:=sCommand , 
+	R_sStdOut:=R_sStdOut , 
+	uiStdOutSize:=80 , 
+	R_sStdError:=R_sStdError , 
+	uiStdErrorSize:=80 , 
+	tTimeout:=T#5S , 
+	pResult:=ADR(pResult) );
+xExecute:=FALSE;
+xUpdateImage:=xUpdateImage+1;
+END_IF
+```
+
 sURL : variable for the URL address.
 xUpdateImage : Used by the visualization to update the image when the value changes.
 
-![image](https://github.com/mpsaltis/v35_wagoQRENCODE/assets/90796089/539130e6-5bb3-4d96-ad56-755758be98d0)
-
+![image](https://github.com/mpsaltis/v35_wagoQRENCODE/assets/90796089/c70acde8-9d36-4bd3-9b91-d01ff73c239f)
 
 Add the image to a visualization, and assign the Bitmap ID variable as the name of the ImagePool bitmap. Set the Bitmap Version to a variable that is updated when a new QR code is generated.
 
