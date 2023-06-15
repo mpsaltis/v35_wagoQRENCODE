@@ -5,7 +5,7 @@ QR Code Generator for Codesys Visualizations
 
 This repo uses qrencode running in a Docker Container to generate QR images, based on a string that it is given. This can then be saved in a location where it can be accessed within Codesys.Dynamic bitmap can be used to dynamically update the image
 
-
+# Create Docker Image and Container
 1. create qrencode directory in root
 ```   
 mkdir qrencode
@@ -21,7 +21,7 @@ cd qrencode
 nano DockerFile
 ```
 
-Create a file names Dockefile with the following: 
+Create a file names Dockerfile with the following: 
 ```
   FROM alpine:3.18.0
 
@@ -40,21 +40,23 @@ Create a file names Dockefile with the following:
 ![image](https://github.com/mpsaltis/v35_wagoQRENCODE/assets/90796089/864f7573-08e2-4dd8-951c-73b2dfeba1b2)
 
 
-The following command can then be used to create QR codes that are saved in the home directory.
+In the terminal, the following command can then be used to create QR code for www.google.com that is saved in the /home directory.
 
   Note: The directory may be changed to /home/codesys_root/PlcLogic/visu to be used with an image pool in Codesys.
-
+```
 docker run --rm -t -v /home/:/tmp wago/qrencode qrencode -l L -o /tmp/placeholderqr.bmp www.google.com
-
-# Dynamically update the QR Code with Codesys
+```
+# Dynamically update the QR Code with Codesys v3.5
 
 First run the following command in the shell of the PLC to generate a QR code with the name palceholderqr in the home directory:
-  docker run --rm -t -v /home/:/tmp wago/qrencode qrencode -l L -o /tmp/placeholderqr.bmp www.google.com
+```  
+docker run --rm -t -v /home/:/tmp wago/qrencode qrencode -l L -o /tmp/placeholderqr.bmp www.google.com
+```
 Then move this image from the PLC, to your PC to be later imported into Codesys. 
-Create an image pool in Codesys, and add the .png as embeded
+Create an image pool in Codesys, and add the .png as embedded
 ![image](https://github.com/mpsaltis/v35_wagoQRENCODE/assets/90796089/f804b011-7386-4f4c-b387-31a626e00a1b)
 
-Create a POU with an FUExecuteCommand function to pass the command to the shell from Codesys. 
+Create a POU with an FUExecuteCommand function block to pass the command to the shell from Codesys. 
 sURL : variable for the URL address
 
 ![image](https://github.com/mpsaltis/v35_wagoQRENCODE/assets/90796089/539130e6-5bb3-4d96-ad56-755758be98d0)
